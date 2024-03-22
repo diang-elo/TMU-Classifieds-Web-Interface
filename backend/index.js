@@ -5,6 +5,10 @@ const { MongoClient } = require('mongodb');
 const cors = require("cors");
 require('dotenv').config();
 
+//json web token information
+const jwt = require('jsonwebtoken');
+const secret = process.env.SECRET_KEY;
+
 // express app
 const app = express();
 app.use(cors());
@@ -25,6 +29,28 @@ async function connectToMongoDB() {
 }
 connectToMongoDB();
 
+//function to use json web token to authenticate a user when they login
+function generateAccessToken(user) {
+    const payload = {
+      id: user.id,
+      email: user.email,
+      password: user.password
+    };
+    
+    const options = { expiresIn: '1h' };
+  
+    return jwt.sign(payload, secret, options);
+}
+
+//function to verify an access token
+function verifyAccessToken(token) {  
+    try {
+      const decoded = jwt.verify(token, secret);
+      return { success: true, data: decoded };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
 
 // routes 
 app.get('/ads/bysale/all', async (req, res) => {
