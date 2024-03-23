@@ -1,6 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import "./Login.css";
-import React, { useState} from 'react';
 
 //this function handles login functionality. You login using e-mail and a password.
 function Login() {
@@ -8,10 +7,35 @@ function Login() {
     const [password, setPassword] = useState('');
     //add an onSubmit funcitonality
 
+    const loginData = () => {
+        console.log(email+" "+password);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, password: password })
+        };
+        fetch('http://localhost:10000/auth/login', requestOptions)
+            .then(response => response.json())
+            .then((data) => {
+                if (data.message === 'success') {
+                    localStorage.setItem('jwt-token', data.token)
+                    setEmail('')
+                    setPassword('')
+                } else {
+                    alert("oops, something went wrong when trying to login")
+                }
+            });
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        loginData();
+    }
+
     return (
         <div>
             <h2>Fill out your e-mail and password below</h2>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div>
                     <label>E-Mail:&nbsp;</label>
                     <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />

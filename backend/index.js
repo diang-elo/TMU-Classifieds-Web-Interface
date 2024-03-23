@@ -32,15 +32,25 @@ connectToMongoDB();
 //function to use json web token to authenticate a user when they login
 function generateAccessToken(user) {
     const payload = {
-      id: user.id,
       email: user.email,
       password: user.password
     };
     
     const options = { expiresIn: '1h' };
+
+    const tokenBack = {
+        message: "success",
+        token: jwt.sign(payload, secret, options)
+    }
   
-    return jwt.sign(payload, secret, options);
+    return tokenBack;
 }
+
+app.post('/auth/login', (req,res) =>{
+    console.log("We made it to server");
+    response = generateAccessToken(req);
+    res.json(response);
+})
 
 //function to verify an access token
 function verifyAccessToken(token) {  
@@ -51,9 +61,33 @@ function verifyAccessToken(token) {
       return { success: false, error: error.message };
     }
   }
+//middleware to check if a token is there.
+  function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+  
+    if (!token) {
+      return res.sendStatus(401);
+    }
+  
+    const result = verifyAccessToken(token);
+  
+    if (!result.success) {
+      return res.status(403).json({ error: result.error });
+    }
+  
+    req.user = result.data;
+    next();
+  }
+
+  app.get('/auth/protected'/* , authenticateToken */, async (req, res) => {
+    console.log("protected");
+    res.json({ message: 'Welcome to the protected route!', user: req.user });
+  });
 
 // routes 
 app.get('/ads/bysale/all', async (req, res) => {
+    console.log("searchbySaleAll");
     try {
         const database = client.db(process.env.MONGO_DB_NAME); // Replace with your database name
   
@@ -67,6 +101,7 @@ app.get('/ads/bysale/all', async (req, res) => {
 });
 
 app.get('/search/bySale', async (req, res) => {
+    console.log("searchbySale");
     try {
         const queryParam = req.query.item; // Get the query parameter from the request URL
         const database = client.db(process.env.MONGO_DB_NAME);
