@@ -5,19 +5,22 @@ import "./Login.css";
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    //add an onSubmit funcitonality
-
+    
+    //below is a function that handles sending a payloard of data to server and getting back a jsonwebtoken
     const loginData = () => {
         console.log(email+" "+password);
+        //data sent to server
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, password: password })
         };
+        //data received from server
         fetch('http://localhost:10000/auth/login', requestOptions)
             .then(response => response.json())
             .then((data) => {
                 if (data.message === 'success') {
+                    //we store the jsonwebtoken on the local storage of the browser
                     localStorage.setItem('jwt-token', data.token)
                     setEmail('')
                     setPassword('')
@@ -26,7 +29,7 @@ function Login() {
                 }
             });
     }
-
+    //triggers when we click on submit
     const handleSubmit = (e) => {
         e.preventDefault();
         loginData();

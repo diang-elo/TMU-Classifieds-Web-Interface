@@ -45,7 +45,7 @@ function generateAccessToken(user) {
   
     return tokenBack;
 }
-
+//when we login, server hears this request and takes user data, returning a generated web token just for them
 app.post('/auth/login', (req,res) =>{
     console.log("We made it to server");
     response = generateAccessToken(req);
@@ -80,7 +80,7 @@ function verifyAccessToken(token) {
     next();
   }
 
-  app.get('/auth/protected'/* , authenticateToken */, async (req, res) => {
+  app.get('/auth/protected' , authenticateToken, async (req, res) => {
     console.log("protected");
     res.json({ message: 'Welcome to the protected route!', user: req.user });
   });
