@@ -13,7 +13,7 @@ export default function Landing() {
   const getSearch = async (searchNameText) => {
     try {
       const response = await axios.get(
-        `http://localhost:10000/search/${searchType}?item=${searchNameText}`,
+        `http://localhost:10000/search/${searchType}/${searchNameText}`,
         { timeout: 5000 }
       );
       setSearchResults(response.data);
@@ -34,13 +34,13 @@ export default function Landing() {
     }
   };
 
-  const handleSelectItem = (ingredient) => {
+  const handleSelectItem = (search) => {
     if (searchType === "byWanted") {
-      navigate("/ads/" + "byWanted=" + ingredient);
+      navigate("/ads/" + "byWanted=" + search);
     } else if (searchType === "bySale") {
-      navigate("/ads/" + "bySale=" + ingredient);
+      navigate("/ads/" + "bySale=" + search);
     } else if (searchType === "byService") {
-      navigate("/ads/" + "byService=" + ingredient);
+      navigate("/ads/" + "byService=" + search);
     }
   };
 
@@ -50,7 +50,7 @@ export default function Landing() {
         <h1 className="mb-4 text-6xl font-bold text-gray-900 cursive-font">
           TMU Classifieds Web Interface
         </h1>
-        <form className="sm:w-3/5 w-80 relative" autocomplete="off">
+        <form className="sm:w-3/5 w-80 relative" autoComplete="off">
           <label
             htmlFor="search-type"
             className="mb-2 text-sm font-medium text-gray-900 sr-only"
@@ -104,7 +104,7 @@ export default function Landing() {
           )}
         </form>
 
-        <div class="flex justify-center">
+        <div className="flex justify-center">
           <ExploreCard
             title="MackBook Pro (New)"
             img="https://cdn.mos.cms.futurecdn.net/GfinEMFXnT42BFxAcDc2rA.jpg"

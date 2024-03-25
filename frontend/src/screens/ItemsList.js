@@ -11,20 +11,11 @@ function ItemsList() {
   const [isLoading, setIsLoading] = useState(true);
   let params = useParams();
   let [key, value] = params.term.split("=");
-
   let endpoint = "";
-  let request = "";
-  if (key === "bySale") {
-    request = "get";
-    endpoint = "http://localhost:10000/search/bySale?item=" + value;
-    value = { ingredientIds: value };
-  } else if (key === "byWanted") {
-    request = "get";
-    endpoint = "http://localhost:10000/search/byWanted?item=" + value;
-  } else if (key === "byService") {
-    request = "get";
-    endpoint = "http://localhost:10000/search/byService?item=" + value;
-  }
+  let request = "get";
+  console.log(value);
+  console.log(key);
+  endpoint = `http://localhost:10000/search/${key}/${value}`;
 
   const getSearch = (e) => {
     if (request === "get") {
@@ -56,8 +47,10 @@ function ItemsList() {
   ) : (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
       {searchedItems.map((item) => (
-        <div key={item.id}>
+        <div key={item._id}>
           <ItemCard
+            type={key}
+            id={item._id}
             imageUrl={item.images[0]}
             title={item.title}
             description={item.description}

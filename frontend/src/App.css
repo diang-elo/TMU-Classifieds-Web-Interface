@@ -1,3 +1,14 @@
 body {
     background-color: #fffee0;
 }
+
+nav{
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    background-color: rgb(30 58 138);
+}
+nav a{
+    margin: 0 1rem;
+
+}

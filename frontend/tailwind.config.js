@@ -4,5 +4,6 @@ module.exports = {
   theme: {
     extend: {},
   },
+  colors: { "tmu-yellow": "#fffee0" },
   plugins: [],
 };
