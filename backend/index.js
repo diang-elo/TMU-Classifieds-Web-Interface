@@ -48,7 +48,7 @@ function generateAccessToken(user) {
 //when we login, server hears this request and takes user data, returning a generated web token just for them
 app.post('/auth/login', (req,res) =>{
     console.log("We made it to server");
-    response = generateAccessToken(req);
+    const response = generateAccessToken(req);
     res.json(response);
 })
 
@@ -62,27 +62,35 @@ function verifyAccessToken(token) {
     }
   }
 //middleware to check if a token is there.
-  function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+  function authenticateToken(req, res) {
+    //const authHeader = req.headers['jwttoken'];
+    //const token = authHeader && authHeader.split('jwt-token')[-1];
+    const token = req;
+    console.log("we are authenticating");
   
     if (!token) {
-      return res.sendStatus(401);
+        console.log("the first failed");
+        return false;
     }
   
     const result = verifyAccessToken(token);
+    console.log(result);
   
     if (!result.success) {
-      return res.status(403).json({ error: result.error });
+        console.log("the second failed");
+        return false;
     }
   
-    req.user = result.data;
-    next();
+    return true;
   }
 
-  app.get('/auth/protected' , authenticateToken, async (req, res) => {
-    console.log("protected");
-    res.json({ message: 'Welcome to the protected route!', user: req.user });
+  app.get('/auth/protected' , async (req, res) => {
+    //result = authenticateToken(req.headers.jwttoken);
+    const response = {
+        boolToken: authenticateToken(req.headers.jwttoken)
+    };
+    console.log(response.boolToken);
+    res.json(response);
   });
 
 // routes 

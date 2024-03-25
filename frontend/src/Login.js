@@ -21,7 +21,7 @@ function Login() {
             .then((data) => {
                 if (data.message === 'success') {
                     //we store the jsonwebtoken on the local storage of the browser
-                    localStorage.setItem('jwt-token', data.token)
+                    localStorage.setItem('jwttoken', data.token)
                     setEmail('')
                     setPassword('')
                 } else {
