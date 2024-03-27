@@ -2,12 +2,12 @@ import { useState } from "react";
 import "./Login.css";
 
 //this function handles login functionality. You login using e-mail and a password.
-function Login() {
+function Registration() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     
     //below is a function that handles sending a payloard of data to server and getting back a jsonwebtoken
-    const loginData = () => {
+    const registrationData = () => {
         console.log(email+" "+password);
         //data sent to server
         const requestOptions = {
@@ -16,24 +16,25 @@ function Login() {
             body: JSON.stringify({ email: email, password: password })
         };
         //data received from server
-        fetch('http://localhost:10000/auth/login', requestOptions)
+        fetch('http://localhost:10000/auth/registration', requestOptions)
             .then(response => response.json())
             .then((data) => {
                 if (data.message === 'success') {
-                    //we store the jsonwebtoken on the local storage of the browser
-                    localStorage.setItem('jwttoken', data.token)
                     setEmail('')
                     setPassword('')
-                    alert("You successfully logged in.")
+                    alert("Account Registered successfully.")
+                }
+                else if (data.message === "exists") {
+                    alert("that email is already used elsewhere")
                 } else {
-                    alert("oops, something went wrong when trying to login")
+                    alert("oops, something went wrong when trying to register your account")
                 }
             });
     }
     //triggers when we click on submit
     const handleSubmit = (e) => {
         e.preventDefault();
-        loginData();
+        registrationData();
     }
 
     return (
@@ -48,10 +49,10 @@ function Login() {
                     <label>Password:&nbsp;</label>
                     <textarea value={password} onChange={(e) => setPassword(e.target.value)}></textarea>
                 </div>
-                <button type="submit">Log-in</button>
+                <button type="submit">Register</button>
             </form>
         </div>
     );
 }
 
-export default Login;
+export default Registration;

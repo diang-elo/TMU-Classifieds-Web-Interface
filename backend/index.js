@@ -18,6 +18,9 @@ app.use(express.json())
 const url = process.env.MONGO_CONNECTION; // MongoDB connection string
 const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
+const bcrypt = require("bcrypt");
+const saltRounds = 8;
+
 // Connect to MongoDB
 async function connectToMongoDB() {
     try {
@@ -48,8 +51,36 @@ function generateAccessToken(user) {
 //when we login, server hears this request and takes user data, returning a generated web token just for them
 app.post('/auth/login', (req,res) =>{
     console.log("We made it to server");
-    const response = generateAccessToken(req);
+    console.log("email="+req.body.email,"password="+req.body.password);
+    const response = generateAccessToken(req.body);
     res.json(response);
+})
+
+//this post read handles registration
+app.post('/auth/registration', async (req, res) => {
+    console.log("the server heard our DB post request");
+    const database = client.db(process.env.MONGO_DB_NAME);
+    const collection = database.collection('Users');
+    const email = req.body.email;
+    const checkExists = await collection.findOne({email: email});
+
+    console.log("email= " +email);
+
+    if (checkExists) {
+        console.log("it already exists");
+        res.json({message: "exists"});
+        return;
+    }
+    //password database storage protection
+    const password = req.body.password;
+    console.log("password=" +password);
+    const hash_Password = await bcrypt.hash(password, saltRounds);
+    console.log("we have hashed the password: " + hash_Password);
+
+    const data = {email: email, password: hash_Password, userAds: []};
+    await collection.insertOne(data);
+    console.log("we should have inserted a record now");
+    res.json({message: "success"});
 })
 
 //function to verify an access token
