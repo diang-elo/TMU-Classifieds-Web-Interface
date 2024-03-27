@@ -61,16 +61,17 @@ app.post('/auth/login', async (req,res) =>{
         res.json({message: "error, user doesn't exist"});
         return;
     }
-    console.log("user return is: " +user.password);
+    const userPassword = user.password;
+    console.log("user return is: " +userPassword);
 
-    correctPassword = await bcrypt.compare(req.body.password, user.password);
+    const correctPassword = await bcrypt.compare(req.body.password, userPassword);
     if (!correctPassword) {
         console.log("wrong password");
         res.json({message: "password is incorrect"});
         return;
     }
 
-    const response = generateAccessToken(user);
+    const response = generateAccessToken({email: email,password: userPassword});
     res.json(response);
 })
 
