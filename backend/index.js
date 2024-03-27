@@ -49,10 +49,28 @@ function generateAccessToken(user) {
     return tokenBack;
 }
 //when we login, server hears this request and takes user data, returning a generated web token just for them
-app.post('/auth/login', (req,res) =>{
+app.post('/auth/login', async (req,res) =>{
     console.log("We made it to server");
-    console.log("email="+req.body.email,"password="+req.body.password);
-    const response = generateAccessToken(req.body);
+    const database = client.db(process.env.MONGO_DB_NAME);
+    const collection = database.collection('Users');
+    const email = req.body.email;
+    const user = await collection.findOne({email}, {password:{$exists:true}});
+
+    if (!user) {
+        console.log("no/wrong user");
+        res.json({message: "error, user doesn't exist"});
+        return;
+    }
+    console.log("user return is: " +user.password);
+
+    correctPassword = await bcrypt.compare(req.body.password, user.password);
+    if (!correctPassword) {
+        console.log("wrong password");
+        res.json({message: "password is incorrect"});
+        return;
+    }
+
+    const response = generateAccessToken(user);
     res.json(response);
 })
 
