@@ -4,6 +4,7 @@ import { useState } from "react";
 function Registration() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
     
     //below is a function that handles sending a payloard of data to server and getting back a jsonwebtoken
     const registrationData = () => {
@@ -33,6 +34,10 @@ function Registration() {
     //triggers when we click on submit
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (!validEmail.test(email)){
+            alert("Incorrect email. Please type email in format xyz@email.com");
+            return;
+        }
         registrationData();
     }
 
