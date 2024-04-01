@@ -41,12 +41,14 @@ connectToMongoDB();
 //Filipp:
 //function to use json web token to authenticate a user when they login
 function generateAccessToken(user) {
-  const payload = {
-    email: user.email,
-    password: user.password,
-  };
-
-  const options = { expiresIn: "1h" };
+    const payload = {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      isAdmin: user.isAdmin
+    };
+    
+    const options = { expiresIn: '1h' };
 
   const tokenBack = {
     message: "success",
@@ -58,15 +60,15 @@ function generateAccessToken(user) {
 //Filipp
 //when we login, server hears this request and takes user data, returning a generated web token just for them
 //we also check information against database to ensure the user exists and input the correct information
-app.post("/auth/login", async (req, res) => {
-  console.log("We made it to server");
-  const database = client.db(process.env.MONGO_DB_NAME);
-  const collection = database.collection("Users");
-  const email = req.body.email;
-  const user = await collection.findOne(
-    { email },
-    { password: { $exists: true } }
-  );
+app.post('/auth/login', async (req,res) =>{
+    console.log("We made it to server");
+    const database = client.db(process.env.MONGO_DB_NAME);
+    const collection = database.collection('Users');
+    const email = req.body.email;
+
+    //const user = await collection.findOne({email: email}, {password:{$exists:true}});
+    const user = await collection.findOne({email: email});
+    //console.log("user fetch is: " +user.userAds);
 
   if (!user) {
     console.log("no/wrong user");
@@ -83,12 +85,12 @@ app.post("/auth/login", async (req, res) => {
     return;
   }
 
-  const response = generateAccessToken({
-    email: email,
-    password: userPassword,
-  });
-  res.json(response);
-});
+    const name = user.name;
+    const admin = user.isAdmin;
+
+    const response = generateAccessToken({name: name, email: email, password: userPassword, isAdmin: admin});
+    res.json(response);
+})
 //Filipp:
 //this post read handles registration, ensuring the email is unique before accepting a new user data input
 app.post("/auth/registration", async (req, res) => {
@@ -100,22 +102,24 @@ app.post("/auth/registration", async (req, res) => {
 
   console.log("email= " + email);
 
-  if (checkExists) {
-    console.log("it already exists");
-    res.json({ message: "exists" });
-    return;
-  }
-  //password database storage protection
-  const password = req.body.password;
-  console.log("password=" + password);
-  const hash_Password = await bcrypt.hash(password, saltRounds);
-  console.log("we have hashed the password: " + hash_Password);
+    if (checkExists) {
+        console.log("it already exists");
+        res.json({message: "exists"});
+        return;
+    }
+    //password database storage protection
+    const password = req.body.password;
+    console.log("password=" +password);
+    const hash_Password = await bcrypt.hash(password, saltRounds);
+    console.log("we have hashed the password: " + hash_Password);
+    const name = req.body.name;
+    const admin = req.body.isAdmin;
 
-  const data = { email: email, password: hash_Password, userAds: [] };
-  await collection.insertOne(data);
-  console.log("we should have inserted a record now");
-  res.json({ message: "success" });
-});
+    const data = {name: name, email: email, password: hash_Password, isAdmin: admin, userAds: []};
+    await collection.insertOne(data);
+    console.log("we should have inserted a record now");
+    res.json({message: "success"});
+})
 
 //function to verify an access token
 function verifyAccessToken(token) {
@@ -127,36 +131,43 @@ function verifyAccessToken(token) {
   }
 }
 //a function that checks to see if user is sending us proper tokens
-function authenticateToken(req, res) {
-  //const authHeader = req.headers['jwttoken'];
-  //const token = authHeader && authHeader.split('jwt-token')[-1];
-  const token = req;
-  console.log("we are authenticating");
-
-  if (!token) {
-    console.log("the first failed");
-    return false;
+  function authenticateToken(req, res) {
+    //const authHeader = req.headers['jwttoken'];
+    //const token = authHeader && authHeader.split('jwt-token')[-1];
+    const token = req;
+    console.log("we are authenticating");
+  
+    if (!token) {
+        console.log("the first failed");
+        return false;
+    }
+  
+    const result = verifyAccessToken(token);
+    console.log(result);
+  
+    if (!result.success) {
+        console.log("the second failed");
+        return false;
+    }
+  
+    return result;
   }
-
-  const result = verifyAccessToken(token);
-  console.log(result);
-
-  if (!result.success) {
-    console.log("the second failed");
-    return false;
-  }
-
-  return true;
-}
 
 app.get("/auth/protected", async (req, res) => {
-  //result = authenticateToken(req.headers.jwttoken);
-  const response = {
+  const result = authenticateToken(req.headers.jwttoken);
+  /* const response = {
     boolToken: authenticateToken(req.headers.jwttoken),
-  };
-  console.log(response.boolToken);
-  console.log("SADSSDD");
-  res.json(response);
+  }; */
+  console.log("response payload = "+result);
+    //checking to see if we can fetch data from tokens
+    try{
+        console.log("email fetch is: " +result.data.email);
+    } catch (error) {
+        console.log("an error occured:");
+        console.log(error);
+        console.log("SADSSDD");
+    }
+  res.json(result);
 });
 
 const spacesEndpoint = new AWS.Endpoint("nyc3.digitaloceanspaces.com");
