@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function PostAdForm() {
+  const navigate = useNavigate();
   const [adData, setAdData] = useState({
     title: "",
     description: "",
@@ -20,30 +23,66 @@ function PostAdForm() {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    // If the input is for images, split the value by commas to create an array
-    const newValue =
-      name === "images" ? value.split(",").map((image) => image.trim()) : value;
-
-    setAdData((prevData) => ({
-      ...prevData,
-      [name]: newValue,
-    }));
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      setAdData((prevData) => ({
+        ...prevData,
+        images: files[0], // Only taking the first file
+      }));
+    } else {
+      setAdData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(adData);
+
+    const formData = new FormData();
+    formData.append("title", adData.title);
+    formData.append("description", adData.description);
+    formData.append("price", adData.price);
+    formData.append("location", adData.location);
+    formData.append("category", adData.category);
+    formData.append("condition", adData.condition);
+    formData.append("adType", adData.adType);
+    formData.append("image", adData.images);
 
     try {
-      await axios.post(
-        `http://localhost:10000/postAd/${adData.adType}`,
-        adData
-      );
+      await axios
+        .post(`http://localhost:10000/postAd/${adData.adType}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(
+          Swal.fire({
+            title: "Succesfully posted",
+            confirmButtonText: "Ok",
+            icon: "success",
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+              if (adData.adType === "byWanted") {
+                navigate("/ads/" + "byWanted=");
+              } else if (adData.adType === "bySale") {
+                navigate("/ads/" + "bySale=");
+              } else if (adData.adType === "byService") {
+                navigate("/ads/" + "byService=");
+              }
+            }
+          })
+        );
       console.log("Ad for sale added successfully");
     } catch (error) {
       console.error("Error adding ad for sale:", error);
+      Swal.fire({
+        title: "Error: try again",
+        confirmButtonText: "Ok",
+        icon: "error",
+      });
     }
   };
 
@@ -53,6 +92,7 @@ function PostAdForm() {
         <label className="block">
           Title:
           <input
+            required
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             type="text"
             name="title"
@@ -82,6 +122,7 @@ function PostAdForm() {
         <label className="block mt-4">
           Location:
           <input
+            required
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             type="text"
             name="location"
@@ -102,6 +143,7 @@ function PostAdForm() {
         <label className="block mt-4">
           Condition:
           <select
+            required
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             name="condition"
             value={adData.condition}
@@ -126,12 +168,12 @@ function PostAdForm() {
           </select>
         </label>
         <label className="block mt-4">
-          Images (URLs separated by commas):
+          Images:
           <input
+            required
             className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            type="text"
-            name="images"
-            value={adData.images}
+            type="file"
+            name="image" // Change this to singular since it's one file at a time
             onChange={handleChange}
           />
         </label>

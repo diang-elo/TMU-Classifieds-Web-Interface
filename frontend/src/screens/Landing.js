@@ -93,7 +93,7 @@ export default function Landing() {
             <ul className="absolute z-10 mt-2 bg-white border border-gray-300 divide-y divide-gray-200 rounded-md shadow-lg w-full">
               {searchResults.map((result) => (
                 <li
-                  key={result.id}
+                  key={result._id}
                   className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                   onClick={() => handleSelectItem(result.title)}
                 >
@@ -112,6 +112,7 @@ export default function Landing() {
             subTitle={
               "8 cores, intel chip, 256 GB SSD, bought 2020. Msg for more info"
             }
+            navigateTo={"/ads/bySale="}
           />
           <ExploreCard
             title="TMU Merch Wanted"
@@ -120,12 +121,14 @@ export default function Landing() {
             subTitle={
               "Looking for any used TMU merched. Will take any size. Need for art project."
             }
+            navigateTo={"/ads/byWanted="}
           />
           <ExploreCard
             title="Computer Science Tutor"
             img="https://lsc.cornell.edu/wp-content/uploads/2021/07/k-g-g0905-achi-39404-lyj2328-1-tutoring.jpg"
             recipeID={11}
             subTitle={"CS graduate offering services for tutoring"}
+            navigateTo={"/ads/byService="}
           />
         </div>
       </div>

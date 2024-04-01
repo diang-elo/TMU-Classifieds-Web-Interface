@@ -9,13 +9,64 @@ body {
     background-color: #fffee0;
 }
 
-nav{
+nav {
     display: flex;
+    flex-wrap: wrap; 
     justify-content: flex-end;
     padding: 1rem;
-    background-color: rgb(30 58 138);
+    background-color: rgb(30, 58, 138);
 }
-nav a{
-    margin: 0 1rem;
 
+nav a {
+    margin: 0.5rem; 
 }
+
+/* Adjustments for screens smaller than 768px */
+@media (max-width: 768px) {
+    nav {
+        justify-content: center; 
+        padding: 0.5rem; 
+    }
+
+    nav a div {
+        padding: 0.5rem; 
+        font-size: 0.9rem; 
+    }
+}
+
+.hamburger-menu {
+    display: none; /* Hidden by default */
+    color: white; 
+    cursor: pointer; 
+    display: none; 
+    font-size: 24px; 
+    padding: 10px;
+}
+
+@media (max-width: 480px) {
+    /* Show hamburger menu */
+    .hamburger-menu {
+        display: block;
+        cursor: pointer;
+    }
+
+    /* Hide regular nav items */
+    nav a {
+        display: none;
+    }
+
+
+    nav {
+        justify-content: flex-start;
+    }
+}
+
+.cardHoverEffect {
+    transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+  }
+  
+  .cardHoverEffect:hover {
+    transform: translateY(-0.25rem) scale(1.05);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function ExploreCard({ title, subTitle, img, adID }) {
+function ExploreCard({ title, subTitle, img, adID, navigateTo }) {
   const navigate = useNavigate();
   return (
     <div className="max-w-[22rem] bg-white rounded-2xl overflow-hidden shadow-lg transition-transform duration-300 transform hover:scale-105 mx-2 my-8">
@@ -15,7 +15,7 @@ function ExploreCard({ title, subTitle, img, adID }) {
         <p className="text-gray-600">{subTitle}</p>
         <div className="flex justify-start mt-4">
           <button
-            onClick={() => navigate("/info/" + adID)}
+            onClick={() => navigate(navigateTo)}
             className="bg-blue-800  text-white px-4 py-2 rounded hover:bg-blue-900 transition-colors"
           >
             Explore

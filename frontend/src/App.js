@@ -1,3 +1,4 @@
+import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
@@ -9,25 +10,42 @@ import Info from "./screens/Info";
 import PostAdScreen from "./screens/PostAdScreen";
 
 function App() {
-  console.log("I am starting");
+  // Toggle visibility of navbar links for mobile view
+  const toggleNavLinks = () => {
+    // Check if the hamburger menu is visible
+    const menu = document.querySelector(".hamburger-menu");
+    if (getComputedStyle(menu).display !== "none") {
+      const links = document.querySelectorAll("nav a");
+      links.forEach((link) => {
+        if (link.style.display === "block" || link.style.display === "") {
+          link.style.display = "none";
+        } else {
+          link.style.display = "block";
+        }
+      });
+    }
+  };
+
   return (
     <Router>
       <div className="App">
         <nav>
+          <div className="hamburger-menu" onClick={toggleNavLinks}>
+            ☰
+          </div>
           <Link to="/">
-            {" "}
             <div className="cursor-pointer bg-[#fffee0] rounded-md p-2">
               Home
             </div>
           </Link>
           <Link to="/auth/login">
-          <div className="cursor-pointer bg-[#fffee0] rounded-md p-2">
+            <div className="cursor-pointer bg-[#fffee0] rounded-md p-2">
               Login
             </div>
           </Link>
           <Link to="/auth/registration">
-          <div className="cursor-pointer bg-[#fffee0] rounded-md p-2">
-              register
+            <div className="cursor-pointer bg-[#fffee0] rounded-md p-2">
+              Register
             </div>
           </Link>
           <Link to="/postAd">
