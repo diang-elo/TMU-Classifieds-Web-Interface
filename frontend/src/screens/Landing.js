@@ -66,7 +66,7 @@ export default function Landing() {
               className="block p-4 pr-8 text-sm text-gray-900 bg-gray-50 rounded-l-lg border border-gray-300 focus:ring-blue-500"
             >
               <option value="bySale">Items for Sale</option>
-              <option value="byWanted">Items Wanted</option>
+              <option value="byWanted">Wanted Items</option>
               <option value="byService">Academic Services</option>
             </select>
             <input
@@ -77,7 +77,7 @@ export default function Landing() {
               type="search"
               id="default-search"
               className="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50  border border-gray-300 focus:ring-blue-500"
-              placeholder="Search Ingredient"
+              placeholder="Search for advertisements:"
               value={searchName}
             />
             <button
@@ -85,7 +85,7 @@ export default function Landing() {
               type="submit"
               className="text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-900 font-medium rounded-r-lg text-sm px-4 py-2"
             >
-              Search
+              Search!
             </button>
           </div>
           {/* Display the search results as a menu */}
