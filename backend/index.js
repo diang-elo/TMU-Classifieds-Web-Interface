@@ -155,6 +155,13 @@ function authenticateToken(req, res) {
 
   const result = verifyAccessToken(token);
   console.log(result);
+  
+  //check token didn't expire.
+  var currentTime = Date.now().valueOf() / 1000;
+  if ( token.exp < currentTime) {
+    console.log("expired token");
+    return false;
+   }
 
   if (!result.success) {
     console.log("the second failed");
