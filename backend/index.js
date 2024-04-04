@@ -370,6 +370,54 @@ app.delete("/remove/:collectionName/:id", async (req, res) => {
   }
 });
 
+app.get("/items/:adType", async (req, res) => {
+  const { min, max } = req.query;
+  const adType = req.params.adType;
+  let collectionName = "";
+
+  try {
+    const database = client.db(process.env.MONGO_DB_NAME);
+    if (adType === "bySale") {
+      collectionName = "Sale";
+    } else if (adType === "byWanted") {
+      collectionName = "Wanted";
+    } else if (adType === "byService") {
+      collectionName = "Service";
+    } else {
+      return res.status(400).json({ error: "Invalid ad type" });
+    }
+
+    const collection = database.collection(collectionName);
+
+    let query = {};
+    console.log(typeof min, max.length, "tteteet");
+
+    // Only apply price filtering if both min and max values are provided
+    if (min.length !== 0 && max.length !== 0) {
+      const numMin = parseInt(min, 10);
+      const numMax = parseInt(max, 10);
+
+      query = {
+        $expr: {
+          $and: [
+            { $gte: [{ $toInt: "$price" }, numMin] },
+            { $lte: [{ $toInt: "$price" }, numMax] },
+          ],
+        },
+      };
+    }
+
+    const items = await collection.aggregate([{ $match: query }]).toArray();
+
+    res.json(items);
+  } catch (error) {
+    console.error("Failed to retrieve items:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving items." });
+  }
+});
+
 // requests listen
 const port = process.env.PORT || 3001;
 app.listen(port, () => {

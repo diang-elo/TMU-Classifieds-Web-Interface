@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import ItemCard from "../components/cards/ItemCard";
+import PriceFilter from "../components/PriceFilter";
 
 function ItemsList() {
   const [searchedItems, setSearchedItems] = useState([]);
@@ -36,6 +37,20 @@ function ItemsList() {
     getSearch(params.term);
   }, [params.term]);
 
+  const fetchItems = async (minPrice, maxPrice) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `http://localhost:10000/items/${key}?min=${minPrice}&max=${maxPrice}`
+      );
+      setSearchedItems(response.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return isLoading ? (
     <div className="flex items-center justify-center h-screen">
       <ClipLoader color="#36d7b7" />
@@ -45,20 +60,23 @@ function ItemsList() {
       <div className="text-4xl">Does not exist</div>
     </div>
   ) : (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-      {searchedItems.map((item) => (
-        <div key={item._id}>
-          <ItemCard
-            type={key}
-            id={item._id}
-            imageUrl={item.images[0]}
-            title={item.title}
-            description={item.description}
-            price={item.price}
-            condition={item.condition}
-          />
-        </div>
-      ))}
+    <div>
+      <PriceFilter onFilter={fetchItems} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+        {searchedItems.map((item) => (
+          <div key={item._id}>
+            <ItemCard
+              type={key}
+              id={item._id}
+              imageUrl={item.images[0]}
+              title={item.title}
+              description={item.description}
+              price={item.price}
+              condition={item.condition}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
