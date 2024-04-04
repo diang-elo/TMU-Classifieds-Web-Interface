@@ -56,8 +56,11 @@ function ItemsList() {
       <ClipLoader color="#36d7b7" />
     </div>
   ) : searchedItems.length === 0 ? (
-    <div className="flex items-center justify-center h-screen">
-      <div className="text-4xl">Does not exist</div>
+    <div className="">
+      <PriceFilter onFilter={fetchItems} />
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-4xl">Does not exist</div>
+      </div>
     </div>
   ) : (
     <div>
