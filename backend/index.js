@@ -286,16 +286,32 @@ app.post("/postAd/:adType", upload, async (req, res) => {
   const database = client.db(process.env.MONGO_DB_NAME);
   let collection;
   console.log(req.file);
-
+  let byWanted = false;
   // Determine the collection based on adType
   if (adType === "bySale") {
     collection = database.collection("Sale");
   }
   if (adType === "byWanted") {
     collection = database.collection("Wanted");
+    byWanted = true;
   }
   if (adType === "byService") {
     collection = database.collection("Service");
+  }
+
+  let contactInfo;
+  let contanctInfoKey;
+  try {
+    if (byWanted) {
+      contactInfo = JSON.parse(req.body.buyer);
+      contanctInfoKey = "buyer";
+    } else {
+      contactInfo = JSON.parse(req.body.seller);
+      contanctInfoKey = "seller";
+    }
+  } catch (error) {
+    console.error("Error parsing seller information:", error);
+    return res.status(400).json({ error: "Invalid seller information" });
   }
 
   // Construct ad object
@@ -307,6 +323,7 @@ app.post("/postAd/:adType", upload, async (req, res) => {
     category: req.body.category,
     condition: req.body.condition,
     images: req.file ? [req.file.location] : null, // Image URL from DigitalOcean Spaces
+    [contanctInfoKey]: contactInfo,
   };
 
   // Insert ad into the collection

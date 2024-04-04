@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 function PostAdScreen() {
   const [correctToken, setCorrectToken] = useState("");
+  const [userData, setUserData] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("jwttoken");
@@ -17,7 +18,8 @@ function PostAdScreen() {
       .then((res) => res.json())
       .then((data) => {
         setCorrectToken(data.success);
-        console.log(data);
+        setUserData(data.data);
+        console.log(data.data);
       });
   }, []);
   if (!correctToken) {
@@ -29,7 +31,7 @@ function PostAdScreen() {
   }
   return (
     <div>
-      <PostAdForm />
+      <PostAdForm userData={userData} />
     </div>
   );
 }

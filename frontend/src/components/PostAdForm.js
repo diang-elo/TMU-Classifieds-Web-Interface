@@ -3,7 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
-function PostAdForm() {
+function PostAdForm({ userData }) {
   const navigate = useNavigate();
   const [adData, setAdData] = useState({
     title: "",
@@ -39,6 +39,17 @@ function PostAdForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const sellerData = JSON.stringify({
+      Name: userData.name,
+      Email: userData.email,
+    });
+
+    let contactType = "";
+    if (adData.adType === "byWanted") {
+      contactType = "buyer";
+    } else {
+      contactType = "seller";
+    }
 
     const formData = new FormData();
     formData.append("title", adData.title);
@@ -49,7 +60,7 @@ function PostAdForm() {
     formData.append("condition", adData.condition);
     formData.append("adType", adData.adType);
     formData.append("image", adData.images);
-
+    formData.append(contactType, sellerData);
     try {
       await axios
         .post(`http://localhost:10000/postAd/${adData.adType}`, formData, {
