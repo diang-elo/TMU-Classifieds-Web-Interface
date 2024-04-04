@@ -9,6 +9,7 @@ import ItemsList from "./screens/ItemsList";
 import Info from "./screens/Info";
 import PostAdScreen from "./screens/PostAdScreen";
 import AdminPage from "./screens/AdminPage";
+import ChatScreen from "./screens/ChatScreen";
 
 function App() {
   // Toggle visibility of navbar links for mobile view
@@ -83,6 +84,7 @@ function App() {
           <Route path="/adsInfo/:id/:term" element={<Info />} />
           <Route path="/postAd" element={<PostAdScreen />} />
           <Route path="/adminPage" element={<AdminPage />} />
+          <Route path="/chat" element={<ChatScreen />} />
         </Routes>
       </div>
     </Router>

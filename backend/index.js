@@ -407,7 +407,6 @@ app.get("/items/:adType", async (req, res) => {
     const collection = database.collection(collectionName);
 
     let query = {};
-    console.log(typeof min, max.length, "tteteet");
 
     // Only apply price filtering if both min and max values are provided
     if (min.length !== 0 && max.length !== 0) {
@@ -432,6 +431,43 @@ app.get("/items/:adType", async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while retrieving items." });
+  }
+});
+
+app.post("/sendMessage", async (req, res) => {
+  const { sender, message } = req.body;
+
+  if (!sender || !message) {
+    return res.status(400).json({ error: "Sender and message are required." });
+  }
+
+  try {
+    const database = client.db(process.env.MONGO_DB_NAME);
+    const messages = database.collection("Message");
+
+    const result = await messages.insertOne({ sender, message });
+
+    res.status(201).json({
+      message: "Message sent successfully",
+      messageId: result.insertedId,
+    });
+  } catch (error) {
+    console.error("Error sending message:", error);
+    res.status(500).json({ error: "Failed to send message" });
+  }
+});
+
+app.get("/getMessages", async (req, res) => {
+  try {
+    const database = client.db(process.env.MONGO_DB_NAME);
+    const collection = database.collection("Message");
+
+    const messages = await collection.find({}).toArray(); // Retrieve all documents in the collection
+
+    res.status(200).json(messages);
+  } catch (error) {
+    console.error("Error retrieving messages:", error);
+    res.status(500).json({ error: "Failed to retrieve messages" });
   }
 });
 
