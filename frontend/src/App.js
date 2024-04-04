@@ -70,6 +70,11 @@ function App() {
               Services Offered
             </div>
           </Link>
+          <Link to="/chat">
+            <div className="cursor-pointer bg-[#fffee0] rounded-md p-2">
+              Chat Room
+            </div>
+          </Link>
           <Link to="/adminPage/">
             <div className="cursor-pointer bg-[#fffee0] rounded-md p-2">
               Admin Page
