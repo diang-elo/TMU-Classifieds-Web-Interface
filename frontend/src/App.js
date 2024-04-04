@@ -52,7 +52,7 @@ function App() {
           </Link>
           <Link to="/postAd">
             <div className="cursor-pointer bg-[#fffee0] rounded-md p-2">
-              Post Ad
+              Post an Ad
             </div>
           </Link>
           <Link to="/ads/bySale=">
@@ -62,7 +62,7 @@ function App() {
           </Link>
           <Link to="/ads/byWanted=">
             <div className="cursor-pointer bg-[#fffee0] rounded-md p-2">
-              Items Wanted
+              Wanted Items
             </div>
           </Link>
           <Link to="/ads/byService=">
@@ -77,7 +77,7 @@ function App() {
           </Link>
           <Link to="/adminPage/">
             <div className="cursor-pointer bg-[#fffee0] rounded-md p-2">
-              Admin Page
+              Admin Dashboard
             </div>
           </Link>
         </nav>
