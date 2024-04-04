@@ -8,6 +8,7 @@ import Landing from "./screens/Landing";
 import ItemsList from "./screens/ItemsList";
 import Info from "./screens/Info";
 import PostAdScreen from "./screens/PostAdScreen";
+import AdminPage from "./screens/AdminPage";
 
 function App() {
   // Toggle visibility of navbar links for mobile view
@@ -68,6 +69,11 @@ function App() {
               Services Offered
             </div>
           </Link>
+          <Link to="/adminPage/">
+            <div className="cursor-pointer bg-[#fffee0] rounded-md p-2">
+              Admin Page
+            </div>
+          </Link>
         </nav>
         <Routes>
           <Route path="/" element={<Landing />} />
@@ -76,6 +82,7 @@ function App() {
           <Route path="/ads/:term" element={<ItemsList />} />
           <Route path="/adsInfo/:id/:term" element={<Info />} />
           <Route path="/postAd" element={<PostAdScreen />} />
+          <Route path="/adminPage" element={<AdminPage />} />
         </Routes>
       </div>
     </Router>
