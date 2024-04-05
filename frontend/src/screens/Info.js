@@ -32,7 +32,7 @@ function Info() {
   }, [params.term]);
 
   return isLoading ? (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center h-screen">
       <div class="mb-4">
         <ClipLoader color="#36d7b7" />
       </div>

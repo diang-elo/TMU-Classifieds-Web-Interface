@@ -9,7 +9,7 @@ function PostAdScreen() {
   useEffect(() => {
     const token = localStorage.getItem("jwttoken");
     console.log(token);
-    fetch("http://localhost:10000/auth/protected", {
+    fetch("https://tmu-classifieds-web-interface.onrender.com/auth/protected", {
       method: "GET",
       headers: {
         jwttoken: token,
