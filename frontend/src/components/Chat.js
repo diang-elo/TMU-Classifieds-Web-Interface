@@ -42,11 +42,11 @@ const Chat = ({ userData }) => {
 
     fetchMessages();
 
-    // // Set up an interval to fetch messages every 5 seconds
-    // const intervalId = setInterval(fetchMessages, 5000);
+    // Set up an interval to fetch messages every 5 seconds
+    const intervalId = setInterval(fetchMessages, 5000);
 
-    // // Clean up the interval on component unmount
-    // return () => clearInterval(intervalId);
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
   }, [lastMessageSentAt]);
 
   return (

@@ -80,10 +80,12 @@ function Registration() {
         </div>
         <div>
           <label>Password:&nbsp;</label>
-          <textarea
+
+          <input
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          ></textarea>
+          />
         </div>
         <div>
           <label>Are you an Admin?:&nbsp;</label>

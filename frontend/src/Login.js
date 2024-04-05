@@ -52,10 +52,11 @@ function Login() {
         </div>
         <div>
           <label>Password:&nbsp;</label>
-          <textarea
+          <input
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          ></textarea>
+          />
         </div>
         <button type="submit">Log-in</button>
       </form>
