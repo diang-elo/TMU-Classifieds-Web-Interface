@@ -13,7 +13,7 @@ export default function Landing() {
   const getSearch = async (searchNameText) => {
     try {
       const response = await axios.get(
-        `http://localhost:10000/search/${searchType}/${searchNameText}`,
+        `https://tmu-classifieds-web-interface.onrender.com/search/${searchType}/${searchNameText}`,
         { timeout: 5000 }
       );
       setSearchResults(response.data);

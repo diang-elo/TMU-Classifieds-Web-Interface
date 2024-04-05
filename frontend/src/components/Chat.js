@@ -12,10 +12,13 @@ const Chat = ({ userData }) => {
     if (!message.trim()) return; // Check if the message is not just empty spaces
 
     try {
-      const response = await axios.post("http://localhost:10000/sendMessage", {
-        sender: userData.email, //
-        message: message,
-      });
+      const response = await axios.post(
+        "https://tmu-classifieds-web-interface.onrender.com/sendMessage",
+        {
+          sender: userData.email, //
+          message: message,
+        }
+      );
       setLastMessageSentAt(new Date());
       setMessage(""); // Clear the message input after sending
       console.log("Message sent:", response.data);
@@ -28,7 +31,9 @@ const Chat = ({ userData }) => {
     // Function to fetch messages
     const fetchMessages = async () => {
       try {
-        const response = await axios.get("http://localhost:10000/getMessages");
+        const response = await axios.get(
+          "https://tmu-classifieds-web-interface.onrender.com/getMessages"
+        );
         setChats(response.data); // Store messages in state
       } catch (error) {
         console.error("Error fetching messages:", error);

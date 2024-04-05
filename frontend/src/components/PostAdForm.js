@@ -63,11 +63,15 @@ function PostAdForm({ userData }) {
     formData.append(contactType, sellerData);
     try {
       await axios
-        .post(`http://localhost:10000/postAd/${adData.adType}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .post(
+          `https://tmu-classifieds-web-interface.onrender.com/postAd/${adData.adType}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then(
           Swal.fire({
             title: "Succesfully posted",

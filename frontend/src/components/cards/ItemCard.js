@@ -23,7 +23,9 @@ function ItemCard({
     e.stopPropagation(); // Prevent event from bubbling up
     try {
       const response = await axios
-        .delete(`http://localhost:10000/remove/${collectionName}/${id}`)
+        .delete(
+          `https://tmu-classifieds-web-interface.onrender.com/remove/${collectionName}/${id}`
+        )
         .then(
           Swal.fire({
             title: "Succesfully Deleted Ad",

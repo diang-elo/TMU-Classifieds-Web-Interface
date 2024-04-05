@@ -11,7 +11,12 @@ function Info() {
 
   const getSearch = (e) => {
     axios
-      .get("http://localhost:10000/info/" + params.term + "/" + params.id)
+      .get(
+        "https://tmu-classifieds-web-interface.onrender.com/info/" +
+          params.term +
+          "/" +
+          params.id
+      )
       .then(function (response) {
         console.log(response);
         setSearchedAd(response.data);

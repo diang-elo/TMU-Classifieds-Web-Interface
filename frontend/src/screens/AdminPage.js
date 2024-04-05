@@ -11,7 +11,7 @@ function AdminPage() {
   useEffect(() => {
     const token = localStorage.getItem("jwttoken");
     console.log(token);
-    fetch("http://localhost:10000/auth/protected", {
+    fetch("https://tmu-classifieds-web-interface.onrender.com/auth/protected", {
       method: "GET",
       headers: {
         jwttoken: token,
@@ -27,7 +27,7 @@ function AdminPage() {
   useEffect(() => {
     if (tokenData && tokenData.isAdmin) {
       axios
-        .get("http://localhost:10000/getallads/")
+        .get("https://tmu-classifieds-web-interface.onrender.com/getallads/")
         .then(function (response) {
           console.log(response);
           setAllAds(response.data);

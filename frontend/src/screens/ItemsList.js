@@ -16,7 +16,7 @@ function ItemsList() {
   let request = "get";
   console.log(value);
   console.log(key);
-  endpoint = `http://localhost:10000/search/${key}/${value}`;
+  endpoint = `https://tmu-classifieds-web-interface.onrender.com/search/${key}/${value}`;
 
   const getSearch = (e) => {
     if (request === "get") {
@@ -41,7 +41,7 @@ function ItemsList() {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:10000/items/${key}?min=${minPrice}&max=${maxPrice}`
+        `https://tmu-classifieds-web-interface.onrender.com/items/${key}?min=${minPrice}&max=${maxPrice}`
       );
       setSearchedItems(response.data);
     } catch (err) {
